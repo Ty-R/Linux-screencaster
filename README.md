@@ -15,6 +15,8 @@ Basic front end to `byzanz-record` that allows you to define an area to start re
 
 * Make `gif.sh` executable
 * Execute `./gif.sh`
+* Drag a selection to record
+* Once done click the icon within the notification tray
 
 ##### Known issues:
 

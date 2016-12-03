@@ -69,4 +69,4 @@ while $(kill -0 $ID 2> /dev/null); do
   sleep 1; ((time_elapsed+=1))
 done
 
-echo -ne "\r\033[KSaving "$name".gif at ${DIR}\\n"
+echo -ne "\r\033[KSaving "$name" at ${DIR}\\n"
