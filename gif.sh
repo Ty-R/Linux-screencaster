@@ -4,9 +4,9 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 cd "$DIR"
 
 function ctrl_c() {
-        echo -ne "\r\033[KRecording canceled\\n"
-        rm $name.gif 2> /dev/null
-        exit
+  echo -ne "\r\033[KRecording canceled\\n"
+  rm $name.gif 2> /dev/null
+  exit
 }
 trap ctrl_c INT
 
