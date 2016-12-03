@@ -121,7 +121,7 @@ int main(void)
 
   XCloseDisplay(disp);
 
-  printf("%d %d %d %d\n",rw,rh,rx,ry);
+  printf("%dx%d+%d+%d\n",rw,rh,rx,ry);
 
   return EXIT_SUCCESS;
 }
