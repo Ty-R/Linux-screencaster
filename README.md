@@ -9,7 +9,7 @@ Basic front end to `byzanz-record` that allows you to define an area to start re
 * yad (uses yad notification so DE like Unity may need further tweaking)
 * byzanz-record
 * libx11-dev
-* A suitable icon (not a dependency but it's nice to have - I like `https://www.iconfinder.com/icons/118789/download/png/128`) and mane it 'record.png'
+* A suitable icon (not a dependency but it's nice to have - I like `https://www.iconfinder.com/icons/118789/download/png/128`) and name it 'record.png'
 
 ##### Getting started:
 
