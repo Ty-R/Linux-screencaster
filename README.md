@@ -2,16 +2,19 @@
 
 ##### Command line screencaster for Linux
 
-Basic front end to `byzanz-record` that allows you to define an area to start recording then clicking an icon when you wish to stop, will continue to tweak though the idea is to keep it as basic as it needs to be.
+Basic front end to `byzanz-record` that allows you to define an area to start recording then clicking an icon when you wish to stop.
 
 ##### Dependencies:
+The following packages are required
+```
+$ sudo apt-get install yad
+$ sudo apt-get install byzanz
+$ sudo apt-get install libx11-dev
+```
 
-* yad (uses yad notification so DE like Unity may need further tweaking)
-* byzanz-record
-* libx11-dev
-* A suitable icon (not a dependency but it's nice to have - I like `https://www.iconfinder.com/icons/118789/download/png/128`) and name it 'record.png'
+If no icon is provided `yad` will still be functional but will display a question mark, download an icon, rename it `record.png` and place it within the same directory as `gif.sh`.
 
-##### Getting started:
+##### Recording:
 
 * Make `gif.sh` executable
 * Execute `./gif.sh`
@@ -20,8 +23,6 @@ Basic front end to `byzanz-record` that allows you to define an area to start re
 
 ##### Known issues:
 
-* Do not manually execute `xrectsel`, by manually I mean double clicking it, I'm not sure how to address this issue though there isn't much reason to manually execute it.
+* Do not manually execute `xrectsel`, by manually I mean double clicking it, I'm not sure how to address this issue though there isn't much reason to manually execute it
 * `xrectsel` selections can look a little buggy though this doesn't reflect on the actual selected area
 * Recording timer can carry on beyond a stopped recording, this is because it relies on byzanz process presence and for larger recordings it continues to compile behind the scenes even after the recording has stopped though again, only cosmetic
-
-
