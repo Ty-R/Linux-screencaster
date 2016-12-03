@@ -4,7 +4,7 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 cd "$DIR"
 
 function ctrl_c() {
-        echo -ne "\\rRecording canceled                  \\n"
+        echo -ne "\r\033[KRecording canceled\\n"
         rm $name.gif 2> /dev/null
         exit
 }
@@ -29,7 +29,9 @@ fi
 
 echo -ne " Click and drag a selection\\r"
 
-if [[ $(./xrectsel) =~ ([0-9]+)x([0-9]+)\+([0-9]+)\+([0-9]+) ]]; then
+regex="([0-9]+)x([0-9]+)\+([0-9]+)\+([0-9]+)"
+
+if [[ $(./xrectsel) =~ $regex ]]; then
   w=${BASH_REMATCH[1]} # width
   h=${BASH_REMATCH[2]} # height
   x=${BASH_REMATCH[3]} # 0x
@@ -37,22 +39,34 @@ if [[ $(./xrectsel) =~ ([0-9]+)x([0-9]+)\+([0-9]+)\+([0-9]+) ]]; then
 fi
 
 for i in {3..1}; do
-  echo -ne " ..Starts ${LRED}recording${NC} in $i   \\r"
+  countdown="..Starts ${LRED}recording${NC} in $i"
+  echo -ne " \r\033[K$countdown"
   sleep 1
 done
 
 name=$(date +%s)
 
-yad="yad --notification --text 'Recording, click to stop' --image=record.png"
+text="--text Recording,\ click\ to\ stop"
+image="--image=record.png"
+yad="yad --notification $text $image"
+
+x="--x=$x"
+y="--y=$y"
+w="--width=$w"
+h="--height=$h"
+name="$name.gif"
 
 # start recording and get PID to detect when it stops
-byzanz-record --exec="$yad" --x=$x --y=$y --width=$w --height=$h $name.gif 2> /dev/null & ID=$!
+byzanz-record --exec="$yad" $x $y $w $h $name 2> /dev/null & ID=$!
 
 time_elapsed=0
 
+# loop while recording process exists
+
 while $(kill -0 $ID 2> /dev/null); do
-  echo -ne " ${LRED}Recording${NC} .. ($time_elapsed)       \\r"
+  counter="${LRED}Recording${NC} .. ($time_elapsed)"
+  echo -ne " \r\033[K$counter"
   sleep 1; ((time_elapsed+=1))
 done
 
-echo -ne "Saving "$name".gif at ${DIR}                \\r\\n"
+echo -ne "\r\033[KSaving "$name".gif at ${DIR}\\n"
