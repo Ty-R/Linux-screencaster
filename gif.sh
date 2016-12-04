@@ -1,9 +1,9 @@
 #! /bin/bash
 
-DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 cd "$DIR"
 
-function ctrl_c() {
+ctrl_c() {
   echo -ne "\r\033[KRecording canceled\\n"
   rm $name.gif 2> /dev/null
   exit
@@ -13,6 +13,8 @@ trap ctrl_c INT
 LRED='\033[1;31m'
 NC='\033[0m'
 
+# each time a new recording is started
+# all existing gifs are moved to archives
 if ! [ -d archives ]; then
   mkdir archives
 fi
@@ -32,10 +34,10 @@ echo -ne " Click and drag a selection\\r"
 regex="([0-9]+)x([0-9]+)\+([0-9]+)\+([0-9]+)"
 
 if [[ $(./xrectsel) =~ $regex ]]; then
-  w=${BASH_REMATCH[1]} # width
-  h=${BASH_REMATCH[2]} # height
-  x=${BASH_REMATCH[3]} # 0x
-  y=${BASH_REMATCH[4]} # 0y
+  w=${BASH_REMATCH[1]}
+  h=${BASH_REMATCH[2]}
+  x=${BASH_REMATCH[3]}
+  y=${BASH_REMATCH[4]}
 fi
 
 for i in {3..1}; do
@@ -44,9 +46,7 @@ for i in {3..1}; do
   sleep 1
 done
 
-name=$(date +%s)
-
-text="--text Recording,\ click\ to\ stop"
+text="--text Recording"
 image="--image=record.png"
 yad="yad --notification $text $image"
 
@@ -54,19 +54,20 @@ x="--x=$x"
 y="--y=$y"
 w="--width=$w"
 h="--height=$h"
-name="$name.gif"
+name="$(date +%s).gif"
 
-# start recording and get PID to detect when it stops
-byzanz-record --exec="$yad" $x $y $w $h $name 2> /dev/null & ID=$!
+byzanz-record --exec="$yad" $x $y $w $h $name 2> /dev/null &
+
+sleep 0.2
+
+cmd="ps $(pgrep yad) | grep -m 1 \"$yad\" | wc -l"
 
 time_elapsed=0
 
-# loop while recording process exists
-
-while $(kill -0 $ID 2> /dev/null); do
-  counter="${LRED}Recording${NC} .. ($time_elapsed)"
+while [ $(bash -c "$cmd") -gt 0 ]; do
+  counter="${LRED}Recording${NC}.. ($time_elapsed)"
   echo -ne " \r\033[K$counter"
   sleep 1; ((time_elapsed+=1))
 done
 
-echo -ne "\r\033[KSaving "$name" at ${DIR}\\n"
+echo -ne "\r\033[K"$name" saved at ${DIR}\\n"
