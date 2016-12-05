@@ -60,7 +60,7 @@ byzanz-record --exec="$yad" $x $y $w $h $name 2> /dev/null &
 
 sleep 0.2
 
-cmd="ps $(pgrep yad) | grep -m 1 \"$yad\" | wc -l"
+cmd="ps aux | grep -v grep | grep \"$yad\" | wc -l "
 
 time_elapsed=0
 
