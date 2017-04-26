@@ -70,4 +70,4 @@ while [ $(bash -c "$cmd") -gt 0 ]; do
   sleep 1; ((time_elapsed+=1))
 done
 
-echo -ne "\r\033[K"$name" saved at ${DIR}\\n"
+echo -ne "\r\033[K"$name" saved at file://${DIR}\\n"
