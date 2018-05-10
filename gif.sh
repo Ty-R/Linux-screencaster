@@ -1,11 +1,15 @@
 #! /bin/bash
 
+icon='player_record'  # The icon used by Yad - can be a system icon or local image
+countdown=3           # Countdown in seconds before recording starts
+archive=true          # Move old gifs into a directory instead of deleting them
+
 DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 cd "$DIR"
 
 ctrl_c() {
   echo -ne "\r\033[KRecording canceled\\n"
-  rm $name.gif 2> /dev/null
+  rm *.gif 2> /dev/null
   exit
 }
 trap ctrl_c INT
@@ -13,41 +17,35 @@ trap ctrl_c INT
 LRED='\033[1;31m'
 NC='\033[0m'
 
-# each time a new recording is started
-# all existing gifs are moved to archives
 if ! [ -d archives ]; then
   mkdir archives
 fi
 
-mv *.gif archives 2> /dev/null
-
-if ! [ -f xrectsel ]; then
-  if ! [ -f xrectsel.c ]; then
-    echo "Missing xrectsel.c"
-    exit
-  fi
-  gcc -Wall xrectsel.c -o xrectsel -lX11 && rm xrectsel.c
+if $archive; then
+  mv *.gif archives 2> /dev/null
+else
+  rm *.gif 2> /dev/null
 fi
 
 echo -ne " Click and drag a selection\\r"
 
 regex="([0-9]+)x([0-9]+)\+([0-9]+)\+([0-9]+)"
 
-if [[ $(./xrectsel) =~ $regex ]]; then
+if [[ $(slop) =~ $regex ]]; then
   w=${BASH_REMATCH[1]}
   h=${BASH_REMATCH[2]}
   x=${BASH_REMATCH[3]}
   y=${BASH_REMATCH[4]}
 fi
 
-for i in {3..1}; do
-  countdown="..Starts ${LRED}recording${NC} in $i"
-  echo -ne " \r\033[K$countdown"
+for ((i=$countdown;i>0;i--)); do
+  countdown_timer="..Starts ${LRED}recording${NC} in $i"
+  echo -ne " \r\033[K$countdown_timer"
   sleep 1
 done
 
 text="--text Recording"
-image="--image=record.png"
+image="--image=$icon"
 yad="yad --notification $text $image"
 
 x="--x=$x"

@@ -1,20 +1,19 @@
 # Linux-screencaster
 
-#### Command line screencaster for Linux
+#### Command line gif recorder for Linux
 
-Basic front end to `byzanz-record` that allows you to define an area to start recording then clicking an icon when you wish to stop.
+A simple way to interface with `byzanz-record` which allows you to define an area to start recording, and click an icon when you wish to stop.
 
-#### Dependencies:
+#### Package dependencies:
 
 The following packages are required
 
 ```
-$ sudo apt-get install yad
-$ sudo apt-get install byzanz
-$ sudo apt-get install libx11-dev
+$ apt-get install yad
+$ apt-get install byzanz
+$ apt-get install libx11-dev
+$ apt-get install slop
 ```
-
-If no icon is provided `yad` will still be functional but will be default, download an icon, rename it `record.png` and place it within the same directory as `gif.sh`.
 
 #### Setup:
 
@@ -34,17 +33,23 @@ Download or clone the repository:
 
 `$ ./gif.sh`
 
-* Drag a selection to record
-* Once done click the icon within the notification tray
-* The terminal will output the save location, (Holding CTRL and clicking the path will open that location)
-* Gifs are number named  - e.g. `72364785.gif`
+Areas are selectable two ways:
 
-**Archive:**
+* clicking a window will capture the entire window
+* Clicking and dragging an area will capture the selected area
 
-Each time you begin a new recording any gifs currently present within the parent directory will be moved to an `archives` directory so to keep the parent directory clean, due to gifs being number named - they should be ordered correctly in the archives too, by most recent last.
+Clicking the icon in the **notification tray** will stop and save the recording, the terminal will output the name of the gif, and the save location.
 
----
+Recordings can be cancelled at any point by pressing `CTRL + C`.
 
-**Note:**
+#### Configure
 
-For desktop environments that don't have a notification tray by default (Unity for example) you can modify `gif.sh` to not use `--notification` and instead use a dialogue for example or look into a package that adds a notification tray.
+There isn't much to configure but at the top of the main script sits:
+
+```
+icon='player_record'  # The icon used by Yad - can be a system icon or local image
+countdown=3           # Countdown in seconds before recording starts
+archive=true          # Move old gifs into a directory instead of deleting them
+```
+
+
